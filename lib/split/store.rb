@@ -24,6 +24,34 @@ module Split
       end
     end
 
+    class Cookies
+      def initialize(context)
+        @cookies = context.send :cookies
+      end
+
+      def get(key)
+        name = cookie_name(key)
+        @cookies[name]
+      end
+
+      def choose(key, value)
+        name = cookie_name(key)
+        @cookies[name] = {:value => value, :expires => 6.months.from_now.utc}
+      end
+
+      def delete(key)
+        name = cookie_name key
+        @cookies.delete name
+      end
+
+      private
+
+      def cookie_name(key)
+        stripped = key.gsub(/\W+/, '_')
+        "split_#{stripped}"
+      end
+    end
+
     class << self
       attr_accessor :kind
     end
