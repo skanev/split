@@ -1,5 +1,6 @@
 require 'split/experiment'
 require 'split/alternative'
+require 'split/store'
 require 'split/helper'
 require 'split/version'
 require 'split/configuration'

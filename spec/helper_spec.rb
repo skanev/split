@@ -14,7 +14,7 @@ describe Split::Helper do
   describe "ab_test" do
     it "should assign a random alternative to a new user when there are an equal number of alternatives assigned" do
       ab_test('link_color', 'blue', 'red')
-      ['red', 'blue'].should include(ab_user['link_color'])
+      ['red', 'blue'].should include(split_store.get('link_color'))
     end
 
     it "should increment the participation counter after assignment to a new user" do
@@ -60,7 +60,7 @@ describe Split::Helper do
 
     it  "should allow the share of visitors see an alternative to be specificed" do
       ab_test('link_color', {'blue' => 0.8}, {'red' => 20})
-      ['red', 'blue'].should include(ab_user['link_color'])
+      ['red', 'blue'].should include(split_store.get('link_color'))
     end
 
     it  "should allow alternative weighting interface as a single hash" do

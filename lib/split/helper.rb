@@ -10,8 +10,8 @@ module Split
         else
           begin_experiment(experiment, experiment.control.name) if exclude_visitor?
 
-          if ab_user[experiment.key]
-            ret = ab_user[experiment.key]
+          if split_store.get(experiment.key)
+            ret = split_store.get(experiment.key)
           else
             alternative = experiment.next_alternative
             alternative.increment_participation
@@ -37,10 +37,10 @@ module Split
     def finished(experiment_name, options = {:reset => true})
       return if exclude_visitor?
       return unless (experiment = Split::Experiment.find(experiment_name))
-      if alternative_name = ab_user[experiment.key]
+      if alternative_name = split_store.get(experiment.key)
         alternative = Split::Alternative.new(alternative_name, experiment_name)
         alternative.increment_completion
-        session[:split].delete(experiment_name) if options[:reset]
+        split_store.delete(experiment_name) if options[:reset]
       end
     end
 
@@ -49,11 +49,11 @@ module Split
     end
 
     def begin_experiment(experiment, alternative_name)
-      ab_user[experiment.key] = alternative_name
+      split_store.choose(experiment.key, alternative_name)
     end
 
-    def ab_user
-      session[:split] ||= {}
+    def split_store
+      Split::Store::Session.new(self)
     end
 
     def exclude_visitor?
