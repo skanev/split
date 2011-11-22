@@ -23,5 +23,11 @@ module Split
         @session[:split] ||= {}
       end
     end
+
+    class << self
+      attr_accessor :kind
+    end
+
+    self.kind = ::Split::Store::Session
   end
 end

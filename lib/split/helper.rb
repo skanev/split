@@ -53,7 +53,7 @@ module Split
     end
 
     def split_store
-      Split::Store::Session.new(self)
+      Split::Store.kind.new(self)
     end
 
     def exclude_visitor?
